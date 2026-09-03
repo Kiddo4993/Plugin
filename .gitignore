@@ -1,0 +1,21 @@
+node_modules/
+dist/
+out/
+*.vsix
+.turbo/
+coverage/
+*.log
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+
+# workspace-local THP state (never checked in)
+.thp/
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea/

@@ -1,0 +1,12 @@
+{
+  "name": "@thp/cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Headless THP dispatcher for Codex CLI, Claude Code, Antigravity CLI, and CI. Not yet implemented — Phase 3.",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"@thp/cli: not implemented yet (Phase 3)\"",
+    "typecheck": "echo \"@thp/cli: not implemented yet (Phase 3)\"",
+    "test": "echo \"@thp/cli: not implemented yet (Phase 3)\""
+  }
+}

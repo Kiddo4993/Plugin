@@ -1,0 +1,32 @@
+{
+  "name": "@thp/schema",
+  "version": "0.1.0",
+  "description": "JSON Schema for the .thp.md task spec format.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./thp-spec.schema.json": "./thp-spec.schema.json"
+  },
+  "files": [
+    "dist",
+    "thp-spec.schema.json"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --shims --clean",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo \"no tests in @thp/schema\" && exit 0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}

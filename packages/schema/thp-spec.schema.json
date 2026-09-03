@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thp/thp/main/packages/schema/thp-spec.schema.json",
+  "title": "THP task spec frontmatter",
+  "description": "Machine-readable frontmatter for a .thp.md task spec. The markdown body below the frontmatter carries the human-readable intent and is not covered by this schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["taskType"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable identifier for this spec, used as the telemetry key. Defaults to a slug of the file name when omitted.",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+    },
+    "taskType": {
+      "type": "string",
+      "description": "What kind of work this is (e.g. codegen, refactor, bugfix, test-gen, docs, explain). Open string: unrecognized values just get no affinity bonus from the router, they never fail validation.",
+      "minLength": 1
+    },
+    "contextGlobs": {
+      "type": "array",
+      "description": "Glob patterns, relative to the workspace root, for files to attach as context. Defaults to none — THP never attaches file context you didn't ask for.",
+      "items": { "type": "string", "minLength": 1 },
+      "default": []
+    },
+    "acceptance": {
+      "type": "string",
+      "description": "A shell command run in the workspace root after a dispatch produces a diff. Exit 0 is a pass, anything else is a fail. Omit only when the task genuinely has no automatable acceptance criteria (e.g. prose/explanation tasks) — the resulting dispatch is recorded as 'skipped', never as 'passed'.",
+      "minLength": 1
+    },
+    "constraints": {
+      "type": "array",
+      "description": "Free-text constraints injected verbatim into the prompt for every provider (e.g. \"no new dependencies\").",
+      "items": { "type": "string", "minLength": 1 },
+      "default": []
+    },
+    "budget": {
+      "type": "object",
+      "description": "Per-spec budget ceiling. Falls back to the workspace default in .thp/config.json, then to a hardcoded safety ceiling, when omitted.",
+      "additionalProperties": false,
+      "properties": {
+        "maxUsd": { "type": "number", "exclusiveMinimum": 0 },
+        "maxLatencyMs": { "type": "integer", "exclusiveMinimum": 0 }
+      }
+    },
+    "pinnedProvider": {
+      "type": "string",
+      "description": "Escape hatch: skip scoring and dispatch to this provider (or provider:model) directly. Format 'providerId' or 'providerId:modelId'. Does not bypass the budget ceiling — an over-budget pin requires explicit --force / confirmation.",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_-]+(:[a-zA-Z0-9_.-]+)?$"
+    },
+    "expects": {
+      "type": "string",
+      "description": "The shape of output this task produces. Drives the router's structured-output / tool-support hard filter.",
+      "enum": ["diff", "artifact", "message"],
+      "default": "diff"
+    }
+  }
+}
