@@ -34,9 +34,9 @@ export async function loadWorkspaceConfig(workspaceRoot: string): Promise<Worksp
 /**
  * Merges workspace config over THP's hardcoded defaults into the options
  * shape Router expects. This is the one place the three-tier budget
- * resolution described in docs/DESIGN.md §2 (spec -> workspace config ->
- * hardcoded floor) actually happens — Router itself only ever applies the
- * spec-level override on top of whatever `fallbackBudget` it's given here.
+ * resolution (spec, then workspace config, then a hardcoded floor)
+ * actually happens — Router itself only ever applies the spec-level
+ * override on top of whatever `fallbackBudget` it's handed here.
  */
 export function resolveRouterOptions(config: WorkspaceConfig): RouterOptions {
   return {

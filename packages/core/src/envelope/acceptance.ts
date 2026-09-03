@@ -15,8 +15,7 @@ const DEFAULT_MAX_OUTPUT_BYTES = 64 * 1024;
  * Environment variables safe to forward to the acceptance subprocess. A
  * small allowlist, not a denylist: provider API keys and other secrets are
  * never in this list, so they can only reach the subprocess if a caller
- * explicitly adds them via `extraEnv` — which nothing in this package
- * does. docs/DESIGN.md risk #3.
+ * explicitly adds them via `extraEnv`, which nothing in this package does.
  */
 const SAFE_ENV_KEYS = [
   "PATH",
@@ -53,8 +52,8 @@ function buildSafeEnv(extraEnv: Record<string, string> | undefined): Record<stri
 /**
  * Runs a spec's acceptance command as a subprocess: a stripped environment
  * (see SAFE_ENV_KEYS), a hard timeout, and captured/truncated output.
- * `cwd` should be a scratch checkout when verifying an unreviewed diff, not
- * the live working tree — see ./scratch.ts and docs/DESIGN.md risk #3.
+ * `cwd` should be a scratch checkout when verifying an unreviewed diff,
+ * never the live working tree — see ./scratch.ts.
  */
 export function runAcceptanceCommand(
   command: string,

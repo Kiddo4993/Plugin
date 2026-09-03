@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { InMemoryTelemetryStore } from "./store.js";
 
-// Simulates a native-module load failure (docs/DESIGN.md risk #1): the
-// dynamic `import("better-sqlite3")` inside openTelemetryStore() must be
-// caught, not crash the caller, and must degrade to an in-memory store.
+// Simulates a native-module load failure: the dynamic
+// `import("better-sqlite3")` inside openTelemetryStore() must be caught,
+// not crash the caller, and must degrade to an in-memory store.
 vi.mock("better-sqlite3", () => {
   throw new Error("simulated native binding load failure");
 });

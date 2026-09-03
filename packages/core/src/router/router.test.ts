@@ -48,7 +48,7 @@ describe("Router — hard filters", () => {
 });
 
 describe("Router — cold start scoring", () => {
-  it("falls back to pure cost/latency/affinity when no telemetry exists, per docs/DESIGN.md §3.4", () => {
+  it("falls back to pure cost/latency/affinity when no telemetry exists yet", () => {
     const a = new FakeProvider({
       providerId: "provider-a",
       taskTypeAffinity: { bugfix: 0.5 },
@@ -70,7 +70,7 @@ describe("Router — cold start scoring", () => {
     expect(byProvider["provider-a"]?.successRate.confidence).toBe(0);
     expect(byProvider["provider-b"]?.successRate.confidence).toBe(0);
 
-    // Hand-computed per docs/DESIGN.md §3.4: costCeiling=0.002, latencyCeiling=1000.
+    // Hand-computed: costCeiling=0.002, latencyCeiling=1000.
     // provider-a: normCost=0.5, normLatency=0.5, affinity=0.5 → score = 0.5 (all three terms agree).
     // provider-b: normCost=0, normLatency=0, affinity=1.0 → score = redistributed affinity weight ≈ 0.3077.
     expect(byProvider["provider-a"]?.score).toBeCloseTo(0.5, 4);

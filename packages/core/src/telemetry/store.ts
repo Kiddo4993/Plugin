@@ -3,8 +3,8 @@ import type { TelemetryRecord, TelemetryStats, TelemetryStore } from "../types.j
 /**
  * In-memory telemetry store: no persistence, but zero native dependencies.
  * Used as the automatic fallback when the SQLite backend's native module
- * fails to load (docs/DESIGN.md risk #1), and directly by tests that don't
- * want to depend on better-sqlite3 compiling successfully in CI.
+ * fails to load, and directly by tests that don't want to depend on
+ * better-sqlite3 compiling successfully in CI.
  */
 export class InMemoryTelemetryStore implements TelemetryStore {
   private readonly records: TelemetryRecord[] = [];
@@ -50,12 +50,11 @@ interface SqliteDatabase {
 type SqliteDatabaseCtor = new (path: string) => SqliteDatabase;
 
 /**
- * SQLite-backed telemetry store (docs/DESIGN.md §1.5). Takes an
- * already-loaded better-sqlite3 constructor rather than importing the
- * module itself, so the "native module failed to load" failure mode is
- * something callers (openTelemetryStore) can catch — a module-level
- * `import "better-sqlite3"` would throw before any try/catch in this file
- * ever ran.
+ * SQLite-backed telemetry store. Takes an already-loaded better-sqlite3
+ * constructor rather than importing the module itself, so a "native
+ * module failed to load" failure is something callers (openTelemetryStore)
+ * can actually catch — a module-level `import "better-sqlite3"` would
+ * throw before any try/catch in this file got the chance to run.
  */
 export class SqliteTelemetryStore implements TelemetryStore {
   private readonly db: SqliteDatabase;
@@ -113,9 +112,13 @@ export class SqliteTelemetryStore implements TelemetryStore {
 
 /**
  * Opens the workspace-local telemetry store, preferring the persistent
- * SQLite backend and falling back to an in-memory-only store (with one
- * clear diagnostic, never a crash) if the native module can't be loaded on
- * this platform. docs/DESIGN.md risk #1.
+ * SQLite backend and falling back to an in-memory-only store if the native
+ * module can't be loaded on this platform — one clear warning on stderr,
+ * never a crashed activation. This isn't a hypothetical: better-sqlite3's
+ * install-time native build failed in the environment this project was
+ * first built in (no working Python for node-gyp), which is exactly why
+ * this fallback exists and why better-sqlite3 ships as an optional
+ * dependency of this package rather than a required one.
  */
 export async function openTelemetryStore(dbPath: string): Promise<TelemetryStore> {
   try {
@@ -123,11 +126,10 @@ export async function openTelemetryStore(dbPath: string): Promise<TelemetryStore
     const DatabaseCtor = ((mod as { default?: unknown }).default ?? mod) as SqliteDatabaseCtor;
     return new SqliteTelemetryStore(DatabaseCtor, dbPath);
   } catch (err) {
-    // This is the one clear diagnostic docs/DESIGN.md promises on a native-module load failure, not debug noise.
     console.warn(
       `[thp] telemetry: better-sqlite3 failed to load (${(err as Error).message}); ` +
         "falling back to an in-memory-only telemetry store for this session. " +
-        "Cost/success history will not persist across restarts. See docs/DESIGN.md risk #1.",
+        "Cost/success history will not persist across restarts.",
     );
     return new InMemoryTelemetryStore();
   }
