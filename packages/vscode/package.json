@@ -1,0 +1,11 @@
+{
+  "name": "@thp/vscode",
+  "version": "0.1.0",
+  "private": true,
+  "description": "THP VS Code (and Antigravity/Cursor/Windsurf via Open VSX) extension host adapter. Not yet implemented — Phase 2.",
+  "scripts": {
+    "build": "echo \"@thp/vscode: not implemented yet (Phase 2)\"",
+    "typecheck": "echo \"@thp/vscode: not implemented yet (Phase 2)\"",
+    "test": "echo \"@thp/vscode: not implemented yet (Phase 2)\""
+  }
+}
