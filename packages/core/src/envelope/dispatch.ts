@@ -20,21 +20,21 @@ export interface DispatchOptions {
   signal?: AbortSignal;
   /**
    * Verify a "diff" dispatch's acceptance command in a scratch git
-   * worktree rather than the live working tree (docs/DESIGN.md risk #3).
-   * Defaults to true; set false to run acceptance directly against
-   * ctx.workspaceRoot (e.g. non-git workspaces, or when you've already
-   * reviewed and applied the diff yourself).
+   * worktree rather than the live working tree. Defaults to true; set
+   * false to run acceptance directly against ctx.workspaceRoot (e.g.
+   * non-git workspaces, or when you've already reviewed and applied the
+   * diff yourself).
    */
   useScratchWorktree?: boolean;
 }
 
 /**
- * Runs a TaskSpec through the router's fallback chain (docs/DESIGN.md
- * §3.5): tries each candidate in order, verifies its output, records
- * telemetry for every attempt (pass or fail), and stops at the first
- * candidate that passes (or is unverified because the spec has no
- * acceptance command). The budget ceiling applies cumulatively across the
- * whole chain, not per attempt.
+ * Runs a TaskSpec through the router's fallback chain: tries each
+ * candidate in order, verifies its output, records telemetry for every
+ * attempt (pass or fail), and stops at the first candidate that passes
+ * (or is unverified because the spec has no acceptance command). The
+ * budget ceiling applies cumulatively across the whole chain, not per
+ * attempt.
  */
 export async function dispatchWithFallback(
   spec: TaskSpec,

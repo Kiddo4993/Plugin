@@ -1,15 +1,15 @@
 import type { CapabilityProfile } from "../types.js";
 
 /**
- * Starting defaults for the capability matrix (docs/DESIGN.md §3.1).
+ * Starting defaults for the capability matrix.
  *
  * IMPORTANT: the taskTypeAffinity numbers below are illustrative starting
  * priors for the router's cold-start behavior, not a benchmarked quality
- * claim — nobody has evaluated these models against each other for this
- * project. Pricing is similarly a snapshot that WILL go stale; `asOf`
+ * claim. Nobody has evaluated these models against each other for this
+ * project. Pricing is similarly a snapshot that will go stale; `asOf`
  * records when it was last checked. Both are meant to be overridden per
  * workspace via `.thp/config.json` as real telemetry (and real pricing
- * pages) become available — see docs/DESIGN.md risk #2.
+ * pages) become available.
  */
 export const DEFAULT_CAPABILITY_MATRIX: readonly CapabilityProfile[] = [
   {

@@ -43,9 +43,9 @@ function run(command: string, args: string[], cwd: string): Promise<string> {
 /**
  * Creates a temporary git worktree checked out from the workspace's current
  * HEAD, applies `diff` inside it (when given), runs `fn` with the
- * worktree's path, and always removes the worktree afterward — whether or
+ * worktree's path, and always removes the worktree afterward, whether or
  * not `fn` throws. This is how a provider's diff gets verified before it
- * ever touches the real working tree. docs/DESIGN.md risk #3.
+ * ever touches the real working tree.
  */
 export async function withScratchWorktree<T>(
   workspaceRoot: string,

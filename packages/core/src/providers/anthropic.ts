@@ -25,9 +25,8 @@ export interface AnthropicProviderOptions {
 
 /**
  * Adapter for the Anthropic Messages API (api.anthropic.com/v1/messages),
- * streamed via SSE. See docs/DESIGN.md §1.2 — this class holds only
- * request/response shaping; the shared fetch/SSE plumbing lives in
- * ./http.ts and ./sse.ts.
+ * streamed via SSE. This class only handles request/response shaping; the
+ * shared fetch/SSE plumbing lives in ./http.ts and ./sse.ts.
  */
 export class AnthropicProvider implements Provider {
   readonly id = "anthropic";

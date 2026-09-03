@@ -12,7 +12,7 @@ import type {
   TelemetryStore,
 } from "../types.js";
 
-/** docs/DESIGN.md §3.3 — success-rate carries the most weight once trusted, affinity/cost/latency fill in before then. */
+/** Success rate carries the most weight once it's trusted; cost/latency/affinity fill in until then. */
 export const DEFAULT_WEIGHTS: RouterWeights = {
   cost: 0.25,
   latency: 0.2,
@@ -20,10 +20,10 @@ export const DEFAULT_WEIGHTS: RouterWeights = {
   affinity: 0.2,
 };
 
-/** Attempts at which a (provider, taskType) pair's success rate is fully trusted. docs/DESIGN.md §3.4. */
+/** How many attempts it takes before a (provider, taskType) pair's success rate is fully trusted. */
 export const DEFAULT_COLD_START_THRESHOLD = 5;
 
-/** The hardcoded safety net used only when neither the spec nor workspace config sets a budget. docs/DESIGN.md §2. */
+/** The safety net used only when neither the spec nor the workspace config sets a budget. */
 export const HARD_FALLBACK_BUDGET = { maxUsd: 1.0, maxLatencyMs: 5 * 60 * 1000 };
 
 export interface RouterOptions {
@@ -46,8 +46,8 @@ interface ResolvedBudget {
 
 /**
  * Scores registered providers for a TaskSpec and returns an ordered
- * fallback chain. See docs/DESIGN.md §3 for the full reasoning — this
- * class is a direct implementation of that spec, not a reinterpretation.
+ * fallback chain. The full reasoning behind the scoring model lives in
+ * docs/DESIGN.md; this class is a direct implementation of it.
  */
 export class Router {
   private readonly weights: RouterWeights;
@@ -150,8 +150,7 @@ export class Router {
 
     // An explicit pin bypasses competitive scoring: it goes first in the
     // chain (still gated on the budget flag above), and the rest of the
-    // chain keeps its normal scored order for fallback. See the `id`/
-    // `pinnedProvider` row of docs/DESIGN.md §2.
+    // chain keeps its normal scored order for fallback.
     if (pinnedProviderId !== undefined) {
       const pinnedIndex = scored.findIndex(
         (c) =>
@@ -288,9 +287,9 @@ function computeSuccessRate(
 /**
  * Scales the success-rate term's weight by how much data backs it, and
  * redistributes the unused weight across cost/latency/affinity in their
- * existing ratio — so weights always sum to 1, and a cold (provider,
- * taskType) pair falls back to being purely cost/latency/affinity-driven
- * instead of getting an unearned neutral 0.5 vote. docs/DESIGN.md §3.4.
+ * existing ratio, so the weights always sum to 1. A cold (provider,
+ * taskType) pair ends up purely cost/latency/affinity-driven instead of
+ * getting an unearned neutral 0.5 vote from success rate.
  */
 function computeAdjustedScore(
   weights: RouterWeights,
