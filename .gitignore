@@ -1,13 +1,37 @@
 node_modules/
+.pnpm-store/
 dist/
 out/
 *.vsix
 .turbo/
+.cache/
 coverage/
 *.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
 *.tsbuildinfo
+*.tmp
+*.temp
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# secrets — provider API keys (Anthropic/Gemini/OpenAI-compatible) and
+# any local credentials must never be committed
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cer
+*.pfx
+credentials.json
+secrets.json
 
 # workspace-local THP state (never checked in)
 .thp/
@@ -19,3 +43,6 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# vscode extension test runs
+.vscode-test/
